@@ -1,0 +1,30 @@
+__pycache__/
+*.pyc
+.venv/
+fim_data/
+demo_data/
+demo_sandbox/
+.fim_secret.key
+
+# secrets and local environment
+.env
+.env.*
+*.pem
+*.key
+
+# README files are kept locally and excluded from version control
+README
+README.md
+README.txt
+README.rst
+readme
+readme.md
+readme.txt
+readme.rst
+
+# editor and OS junk
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini

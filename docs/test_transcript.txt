@@ -1,0 +1,108 @@
+
+==============================================================================
+SCENARIO 1: Monitor a file/folder and establish its baseline SHA-256 hash
+==============================================================================
+   Monitoring folder: /home/claude/fim_project/demo_sandbox
+   Baseline recorded for 4 files:
+     app_config.ini     fdd7cf528f822fdccfe3d28bcf74aa13c45e9b659da7a724887ef72539a6dcf0
+     hosts_demo.txt     2441f7c8b8a89d48258fa6bd9a525f4458e48a9274b4b6cfdda4ad2eb5d63861
+     notes.md           21e0af0882e02a63906376a2ae7dc4005a211756bf5ff444d19b159167d9384e
+     report.txt         925d5184301a3d93f7247363184fe5a9f7b7d3884ff786feece20460778c923e
+   Verification scan -> 0 alerts (files are intact)
+
+==============================================================================
+SCENARIO 2: Modify the contents of a monitored file
+==============================================================================
+   Before: 925d5184301a3d93f7247363184fe5a9...
+   After : f16e9c7330445ba939d83546d3a1b143...   <- completely different
+
+==============================================================================
+SCENARIO 3: Detect the modification using SHA-256
+==============================================================================
+   #1 [HIGH] MODIFIED   report.txt
+   baseline hash: 925d5184301a3d93f7247363184fe5a9f7b7d3884ff786feece20460778c923e
+   current  hash: f16e9c7330445ba939d83546d3a1b143fd5ff5494960ac1dd22a9577c7e581e5
+
+==============================================================================
+SCENARIO 4: Delete a monitored file and detect the deletion
+==============================================================================
+   #1 [HIGH] MODIFIED   report.txt
+   #2 [HIGH] DELETED    hosts_demo.txt
+
+==============================================================================
+SCENARIO 5: Create a new file inside the monitored directory
+==============================================================================
+   #1 [HIGH] MODIFIED   report.txt
+   #2 [HIGH] DELETED    hosts_demo.txt
+   #3 [MEDIUM] CREATED    backdoor.sh
+
+==============================================================================
+SCENARIO 5b: Bonus: rename detection (same content, new name)
+==============================================================================
+   #1 [HIGH] MODIFIED   report.txt
+   #2 [HIGH] DELETED    hosts_demo.txt
+   #3 [MEDIUM] CREATED    backdoor.sh
+   #4 [MEDIUM] RENAMED    notes.md -> secret_plans.md
+
+==============================================================================
+SCENARIO 6: Approve legitimate changes through a baseline update
+==============================================================================
+   Attempt with WRONG password -> blocked: Wrong admin password - baseline NOT changed.
+   Approved #4 (RENAMED) with the admin password
+   Approved #2 (DELETED) with the admin password
+   Open alerts after approval:
+   #1 [HIGH] MODIFIED   report.txt
+   #3 [MEDIUM] CREATED    backdoor.sh
+   Re-scan -> 0 new alerts (baseline now matches the approved changes)
+
+==============================================================================
+SCENARIO 6b: Bonus: someone edits the BASELINE DATABASE to hide their tampering
+==============================================================================
+   Attacker changed app_config.ini AND overwrote its hash in the database...
+   #1 [HIGH] MODIFIED   report.txt
+   #3 [MEDIUM] CREATED    backdoor.sh
+   #5 [CRITICAL] BASELINE_TAMPERED app_config.ini
+
+==============================================================================
+SCENARIO 7: How the system records and displays tampering incidents
+==============================================================================
+   --- Activity log (last lines of demo_data/logs/fim_activity.log) ---
+   2026-11-17 09:31:04,582 | INFO     | Scan finished (scan): 4 files, 0 new events, 0.00s
+   2026-11-17 09:31:04,584 | ERROR    | ALERT [HIGH] MODIFIED: /home/claude/fim_project/demo_sandbox/documents/report.txt  (Size 128 -> 196 bytes)
+   2026-11-17 09:31:04,586 | INFO     | Scan finished (scan): 4 files, 1 new events, 0.00s
+   2026-11-17 09:31:04,588 | ERROR    | ALERT [HIGH] DELETED: /home/claude/fim_project/demo_sandbox/configs/hosts_demo.txt  (File no longer exists)
+   2026-11-17 09:31:04,589 | INFO     | Scan finished (scan): 3 files, 1 new events, 0.00s
+   2026-11-17 09:31:04,592 | WARNING  | ALERT [MEDIUM] CREATED: /home/claude/fim_project/demo_sandbox/documents/backdoor.sh  (File is not in the baseline)
+   2026-11-17 09:31:04,594 | INFO     | Scan finished (scan): 4 files, 1 new events, 0.00s
+   2026-11-17 09:31:04,596 | WARNING  | ALERT [MEDIUM] RENAMED: /home/claude/fim_project/demo_sandbox/documents/notes.md -> /home/claude/fim_project/demo_sandbox/documents/secret_plans.md  (Same content, different path)
+   2026-11-17 09:31:04,598 | INFO     | Scan finished (scan): 4 files, 1 new events, 0.00s
+   2026-11-17 09:31:04,709 | INFO     | APPROVED baseline update: RENAMED /home/claude/fim_project/demo_sandbox/documents/secret_plans.md (1 alert(s) closed)
+   2026-11-17 09:31:04,761 | INFO     | APPROVED baseline update: DELETED /home/claude/fim_project/demo_sandbox/configs/hosts_demo.txt (1 alert(s) closed)
+   2026-11-17 09:31:04,764 | INFO     | Scan finished (scan): 4 files, 0 new events, 0.00s
+   2026-11-17 09:31:04,767 | CRITICAL | ALERT [CRITICAL] BASELINE_TAMPERED: /home/claude/fim_project/demo_sandbox/configs/app_config.ini  (Baseline record failed signature check)
+   2026-11-17 09:31:04,769 | INFO     | Scan finished (scan): 4 files, 1 new events, 0.00s
+
+   Report generated: fim_report_20261117_093104.md  and  fim_report_20261117_093104.html
+   --- Report excerpt ---
+   # File Integrity Monitoring - Security Report
+   
+   - **Generated:** 2026-11-17 09:31:04
+   - **Host:** vm (Linux 6.18.44-fc-v553)
+   - **Last scan:** 2026-11-17 09:31:04
+   - **Files in baseline:** 3
+   - **Overall status:** CRITICAL - the integrity baseline itself shows signs of tampering. Investigate immediately.
+   
+   ## Monitored locations
+   
+   - `/home/claude/fim_project/demo_sandbox` (folder)
+   
+   ## Incident summary
+   
+
+==============================================================================
+SCENARIO 8: Real-time detection with Watchdog (no manual scan)
+==============================================================================
+   Monitor started on 1 location(s). Now editing a file...
+   REAL-TIME ALERT -> MODIFIED report.txt (source=realtime)
+
+Demo finished. Everything above was produced by the real engine.

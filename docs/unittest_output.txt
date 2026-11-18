@@ -1,0 +1,29 @@
+test_approve_deletion_and_creation (tests.test_fim.BaselineTests.test_approve_deletion_and_creation) ... ok
+test_approve_modification_updates_baseline (tests.test_fim.BaselineTests.test_approve_modification_updates_baseline) ... ok
+test_baseline_database_tampering_is_detected (tests.test_fim.BaselineTests.test_baseline_database_tampering_is_detected) ... ok
+test_password_too_short (tests.test_fim.BaselineTests.test_password_too_short) ... ok
+test_rebuild_baseline_closes_alerts (tests.test_fim.BaselineTests.test_rebuild_baseline_closes_alerts) ... ok
+test_wrong_password_blocks_approval (tests.test_fim.BaselineTests.test_wrong_password_blocks_approval) ... ok
+test_dashboard_flow (tests.test_fim.DashboardSmokeTest.test_dashboard_flow) ... 2026-11-17 09:33:04.089 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_clean_scan_has_no_events (tests.test_fim.DetectionTests.test_clean_scan_has_no_events) ... ok
+test_creation (tests.test_fim.DetectionTests.test_creation) ... ok
+test_deletion (tests.test_fim.DetectionTests.test_deletion) ... ok
+test_modification (tests.test_fim.DetectionTests.test_modification) ... ok
+test_rename (tests.test_fim.DetectionTests.test_rename) ... ok
+test_revert_auto_closes_alert (tests.test_fim.DetectionTests.test_revert_auto_closes_alert) ... ok
+test_same_alert_not_duplicated (tests.test_fim.DetectionTests.test_same_alert_not_duplicated) ... ok
+test_subfolder_files_are_monitored (tests.test_fim.DetectionTests.test_subfolder_files_are_monitored) ... ok
+test_touch_without_content_change_is_ignored (tests.test_fim.DetectionTests.test_touch_without_content_change_is_ignored) ... ok
+test_file_hash_matches_text_hash (tests.test_fim.HashTests.test_file_hash_matches_text_hash) ... ok
+test_known_vector (tests.test_fim.HashTests.test_known_vector) ... ok
+test_missing_file_raises (tests.test_fim.HashTests.test_missing_file_raises) ... ok
+test_one_character_changes_hash (tests.test_fim.HashTests.test_one_character_changes_hash) ... ok
+test_fim_data_folder_is_never_scanned (tests.test_fim.ValidationAndReportTests.test_fim_data_folder_is_never_scanned) ... ok
+test_report_files_created (tests.test_fim.ValidationAndReportTests.test_report_files_created) ... ok
+test_validation (tests.test_fim.ValidationAndReportTests.test_validation) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 2.542s
+
+OK

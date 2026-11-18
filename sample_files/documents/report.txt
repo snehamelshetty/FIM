@@ -1,0 +1,4 @@
+Quarterly Security Review
+=========================
+Status: all systems nominal.
+Patching completed on 100% of managed laptops.
